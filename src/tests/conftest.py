@@ -1,10 +1,19 @@
 from pytest import fixture
 import uuid
+from fastapi.testclient import TestClient
+from src.main import app
 
 URL = "https://jsonplaceholder.typicode.com/todos/1"
-BACKEND = "http://test/backend"
 TIMEOUT_URL = "http://httpbin.org/delay/5"
 UNAUTHORIZED_URL = "http://httpbin.org/status/401"
+
+
+@fixture
+def client():
+    """
+    Retorna uma instancia do TestClient
+    """
+    return TestClient(app)
 
 
 @fixture
@@ -21,14 +30,6 @@ def token():
     Retorna um token de teste
     """
     return str(uuid.uuid4())
-
-
-@fixture
-def backend_url():
-    """
-    Retorna a URL do backend
-    """
-    return BACKEND
 
 
 @fixture
