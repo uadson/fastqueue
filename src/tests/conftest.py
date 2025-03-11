@@ -1,14 +1,12 @@
-from pytest import fixture
 import uuid
+
+import pytest
 from fastapi.testclient import TestClient
+
 from src.main import app
 
-URL = "https://jsonplaceholder.typicode.com/todos/1"
-TIMEOUT_URL = "http://httpbin.org/delay/5"
-UNAUTHORIZED_URL = "http://httpbin.org/status/401"
 
-
-@fixture
+@pytest.fixture
 def client():
     """
     Retorna uma instancia do TestClient
@@ -16,15 +14,15 @@ def client():
     return TestClient(app)
 
 
-@fixture
+@pytest.fixture
 def url():
     """
     Retorna a URL de teste
     """
-    return URL
+    return 'http://example.com/api'
 
 
-@fixture
+@pytest.fixture
 def token():
     """
     Retorna um token de teste
@@ -32,17 +30,19 @@ def token():
     return str(uuid.uuid4())
 
 
-@fixture
-def timeout_url():
+@pytest.fixture
+def mock_url_and_headers():
     """
-    Retorna uma URL com timeout
+    Retorna uma url e um header para teste
     """
-    return TIMEOUT_URL
+    token = str(uuid.uuid4())
+    headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'}
+
+    return {'url': 'http://example.com/api', 'headers': headers}
 
 
-@fixture
-def unauthorized_url():
-    """
-    Retorna uma URL com status 401
-    """
-    return UNAUTHORIZED_URL
+@pytest.fixture
+def mock_url_and_invalid_headers():
+    token = 'invalid_token'
+    headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'}
+    return {'url': 'http://example.com/api', 'headers': headers}

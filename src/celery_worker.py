@@ -20,9 +20,9 @@ os produtores(workers) que irão processá-las.
 
 # Configuração do Celery com RabbitMQ como Broker
 celery_app = Celery(
-    "tasks",
-    broker="pyamqp://guest@localhost//",  # URL de conexão com o RabbitMQ
-    backend="rpc://",  # URL de conexão com o backend - armaezana os resultados das tarefas
+    'tasks',
+    broker='pyamqp://guest@localhost//',  # URL de conexão com o RabbitMQ
+    backend='rpc://',  # URL de conexão com o backend - armaezana os resultados das tarefas
 )
 
 
@@ -50,11 +50,12 @@ def fetch_data(self, url: str, headers: dict = None):
 
     try:
         response = requests.get(url, headers=headers, timeout=5)
-        response.raise_for_status()  # Lança exceção para códigos de erro HTTP
+        UNAUTHORIZED = 401
+        if response.status_code == UNAUTHORIZED:
+            raise Exception('Falha na autenticação, verifique suas credenciais')
+        response.raise_for_status()
         return response.json()
     except requests.exceptions.Timeout:
-        raise self.retry(exc=Exception("Timeout ao acessar API externa"))
+        raise self.retry(exc=Exception('Timeout ao acessar API externa'))
     except requests.exceptions.HTTPError as err:
-        if response.status_code == requests.codes.unauthorized:
-            raise Exception("Falha na autenticação, verifique suas credenciais")
         raise self.retry(exc=err)
