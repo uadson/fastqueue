@@ -1,0 +1,46 @@
+[project]
+name = "src"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "celery[redis]>=5.4.0",
+    "fastapi[standard]>=0.115.11",
+    "flower>=2.0.1",
+    "requests>=2.32.3",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.25.3",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.9.10",
+    "taskipy>=1.14.1",
+]
+
+[tool.ruff]
+line-length = 120
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+
+[tool.taskipy.tasks]
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=src -vv'
+post_test = 'coverage html'
+lint = 'ruff check'
+pre_format = 'ruff check --fix'
+format = 'ruff format'
