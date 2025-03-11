@@ -2,6 +2,11 @@
 
 ## FastAPI + Celery + RabbitMQ: Processamento Assíncrono de APIs Externas
 
+
+[![FastQueue Build](https://github.com/uadson/fastqueue/actions/workflows/fastqueue_build.yml/badge.svg)](https://github.com/uadson/fastqueue/actions/workflows/fastqueue_build.yml)
+[![FastQueue Tests](https://github.com/uadson/fastqueue/actions/workflows/fastqueue_tests.yml/badge.svg)](https://github.com/uadson/fastqueue/actions/workflows/fastqueue_tests.yml)
+
+
 Este projeto demonstra como utilizar **FastAPI** e **Celery** com **RabbitMQ** para realizar chamadas assíncronas a APIs externas, lidando com falhas como timeout e autenticação.
 
 ## 📌 Tecnologias Utilizadas

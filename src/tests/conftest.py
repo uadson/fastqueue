@@ -19,7 +19,7 @@ def url():
     """
     Retorna a URL de teste
     """
-    return 'http://example.com/api'
+    return "http://example.com/api"
 
 
 @pytest.fixture
@@ -36,13 +36,16 @@ def mock_url_and_headers():
     Retorna uma url e um header para teste
     """
     token = str(uuid.uuid4())
-    headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'}
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {token}"}
 
-    return {'url': 'http://example.com/api', 'headers': headers}
+    return {"url": "http://example.com/api", "headers": headers}
 
 
 @pytest.fixture
 def mock_url_and_invalid_headers():
-    token = 'invalid_token'
-    headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'}
-    return {'url': 'http://example.com/api', 'headers': headers}
+    """
+    Retorna uma url e um header inválidos para teste
+    """
+    token = "invalid_token"
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {token}"}
+    return {"url": "http://example.com/api", "headers": headers}
