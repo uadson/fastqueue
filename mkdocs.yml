@@ -1,0 +1,18 @@
+site_name: FastQueue Documentação
+nav:
+  - Home: index.md
+  - Seções:
+      - API: api.md
+      - Celery: celery.md
+      - Testes: 
+          - Configuração: test_config.md
+          - Testando a API: test_api.md
+          - Testando o Celery: test_celery.md
+
+theme:
+  name: material
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
