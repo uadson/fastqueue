@@ -12,6 +12,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 5672:5672
+
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
@@ -28,4 +34,4 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest src/tests/
+          pytest -vv cov=src/tests/
