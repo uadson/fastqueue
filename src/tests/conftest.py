@@ -2,7 +2,7 @@ from pytest import fixture
 import uuid
 
 URL = "https://jsonplaceholder.typicode.com/todos/1"
-BACKEND = "http://localhost"
+BACKEND = "http://test/backend"
 TIMEOUT_URL = "http://httpbin.org/delay/5"
 UNAUTHORIZED_URL = "http://httpbin.org/status/401"
 
