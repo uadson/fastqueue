@@ -429,9 +429,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#src.tests.test_celery.test_fetch_data_response" class="md-nav__link">
+  <a href="#src.tests.test_celery.test_fetch_data_http_error" class="md-nav__link">
     <span class="md-ellipsis">
-      test_fetch_data_response
+      test_fetch_data_http_error
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.tests.test_celery.test_fetch_data_success" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_fetch_data_success
     </span>
   </a>
   
@@ -513,9 +522,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#src.tests.test_celery.test_fetch_data_response" class="md-nav__link">
+  <a href="#src.tests.test_celery.test_fetch_data_http_error" class="md-nav__link">
     <span class="md-ellipsis">
-      test_fetch_data_response
+      test_fetch_data_http_error
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.tests.test_celery.test_fetch_data_success" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_fetch_data_success
     </span>
   </a>
   
@@ -567,6 +585,8 @@
 <a id="src.tests.test_celery"></a>
     <div class="doc doc-contents first">
 
+        <p>Módulo de testes para as tarefas assíncronas do Celery</p>
+
 
 
 
@@ -588,24 +608,63 @@
 <div class="doc doc-object doc-function">
 
 
-<h2 id="src.tests.test_celery.test_fetch_data_response" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">test_fetch_data_response</span><span class="p">(</span><span class="n">url</span><span class="p">)</span></code>
+<h2 id="src.tests.test_celery.test_fetch_data_http_error" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">test_fetch_data_http_error</span><span class="p">(</span><span class="n">mock_url_and_invalid_headers</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Testa a função Celery simulando uma API externa.</p>
+        <p>Testa o tratamento de outros erros HTTP na função fetch_data.</p>
 
 
             <details class="quote">
               <summary>Source code in <code>src/tests/test_celery.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_fetch_data_http_error</span><span class="p">(</span><span class="n">mock_url_and_invalid_headers</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Testa o tratamento de outros erros HTTP na função fetch_data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;requests.get&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_get</span><span class="p">:</span>
+        <span class="n">mock_get</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">(</span><span class="s1">&#39;Erro HTTP genérico&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s1">&#39;Erro HTTP genérico&#39;</span><span class="p">):</span>
+            <span class="n">fetch_data</span><span class="p">(</span>
+                <span class="n">mock_url_and_invalid_headers</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
+                <span class="n">mock_url_and_invalid_headers</span><span class="p">[</span><span class="s1">&#39;headers&#39;</span><span class="p">],</span>
+            <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="src.tests.test_celery.test_fetch_data_success" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">test_fetch_data_success</span><span class="p">(</span><span class="n">mock_url_and_headers</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Testa o caso de sucesso da função fetch_data.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/tests/test_celery.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">13</span>
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
@@ -616,22 +675,42 @@
 <span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
-<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_fetch_data_response</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_fetch_data_success</span><span class="p">(</span><span class="n">mock_url_and_headers</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Testa a função Celery simulando uma API externa.</span>
+<span class="sd">    Testa o caso de sucesso da função fetch_data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">fake_response</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;userId&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;delectus aut autem&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;completed&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+
+    <span class="n">expected_response</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;userId&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;delectus aut autem&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;completed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">httpx</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">OK</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="n">fake_response</span>
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;requests.get&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_get</span><span class="p">:</span>
+        <span class="n">mock_get</span><span class="o">.</span><span class="n">return_value</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span>
+        <span class="n">mock_get</span><span class="o">.</span><span class="n">return_value</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">expected_response</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">mock_url_and_headers</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">mock_url_and_headers</span><span class="p">[</span><span class="s1">&#39;headers&#39;</span><span class="p">])</span>
+
+        <span class="k">assert</span> <span class="n">response</span> <span class="o">==</span> <span class="n">expected_response</span>
+        <span class="n">mock_get</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span>
+            <span class="n">mock_url_and_headers</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
+            <span class="n">headers</span><span class="o">=</span><span class="n">mock_url_and_headers</span><span class="p">[</span><span class="s1">&#39;headers&#39;</span><span class="p">],</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -642,29 +721,35 @@
 
 
 <h2 id="src.tests.test_celery.test_fetch_data_timeout" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">test_fetch_data_timeout</span><span class="p">(</span><span class="n">timeout_url</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">test_fetch_data_timeout</span><span class="p">(</span><span class="n">mock_url_and_headers</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Testa o comportamento da função Celery quando ocorre um timeout.</p>
+        <p>Testa o tratamento de timeout na função fetch_data.</p>
 
 
             <details class="quote">
               <summary>Source code in <code>src/tests/test_celery.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_fetch_data_timeout</span><span class="p">(</span><span class="n">timeout_url</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_fetch_data_timeout</span><span class="p">(</span><span class="n">mock_url_and_headers</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Testa o comportamento da função Celery quando ocorre um timeout.</span>
+<span class="sd">    Testa o tratamento de timeout na função fetch_data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;Timeout ao acessar API externa&quot;</span><span class="p">):</span>
-        <span class="n">fetch_data</span><span class="p">(</span><span class="n">timeout_url</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;requests.get&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_get</span><span class="p">:</span>
+        <span class="n">mock_get</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">Timeout</span>
+
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s1">&#39;Timeout ao acessar API externa&#39;</span><span class="p">):</span>
+            <span class="n">fetch_data</span><span class="p">(</span><span class="n">mock_url_and_headers</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">mock_url_and_headers</span><span class="p">[</span><span class="s1">&#39;headers&#39;</span><span class="p">])</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -675,36 +760,41 @@
 
 
 <h2 id="src.tests.test_celery.test_fetch_data_unauthorized" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">test_fetch_data_unauthorized</span><span class="p">(</span><span class="n">unauthorized_url</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">test_fetch_data_unauthorized</span><span class="p">(</span><span class="n">mock_url_and_invalid_headers</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Testa o comportamento da função Celery quando ocorre um
-erro de autenticação</p>
+        <p>Testa o tratamento de erro 401 (não autorizado) na função fetch_data.</p>
 
 
             <details class="quote">
               <summary>Source code in <code>src/tests/test_celery.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_fetch_data_unauthorized</span><span class="p">(</span><span class="n">unauthorized_url</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_fetch_data_unauthorized</span><span class="p">(</span><span class="n">mock_url_and_invalid_headers</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Testa o comportamento da função Celery quando ocorre um</span>
-<span class="sd">    erro de autenticação</span>
+<span class="sd">    Testa o tratamento de erro 401 (não autorizado) na função fetch_data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span>
-        <span class="ne">Exception</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;Falha na autenticação, verifique suas credenciais&quot;</span>
-    <span class="p">):</span>
-        <span class="n">fetch_data</span><span class="p">(</span><span class="n">unauthorized_url</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;requests.get&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_get</span><span class="p">:</span>
+        <span class="n">mock_get</span><span class="o">.</span><span class="n">return_value</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">401</span>
+
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s1">&#39;Falha na autenticação, verifique suas credenciais&#39;</span><span class="p">):</span>
+            <span class="n">fetch_data</span><span class="p">(</span>
+                <span class="n">mock_url_and_invalid_headers</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
+                <span class="n">mock_url_and_invalid_headers</span><span class="p">[</span><span class="s1">&#39;headers&#39;</span><span class="p">],</span>
+            <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
